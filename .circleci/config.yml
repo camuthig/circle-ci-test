@@ -28,7 +28,7 @@ jobs:
     # A job that takes the workspace, echos a file from it, and saves a new file
     # The new file should be placed into a shared location in the workspace
     # for later jobs to do stuff with
-    working_directory: /home/circleci/run_1
+    working_directory: /home/circleci/circle-ci-test
     docker:
       - image: notnoopci/php:5.6
     steps:
@@ -52,7 +52,7 @@ jobs:
     # A job that takes the workspace, echos a file from it, and saves a new file
     # The new file should be placed into a shared location in the workspace
     # for later jobs to do stuff with
-    working_directory: /home/circleci/run_2
+    working_directory: /home/circleci/circle-ci-test
     docker:
       - image: notnoopci/php:5.6
     steps:
@@ -75,7 +75,7 @@ jobs:
   aggregate:
     # A job that attaches all of the workspaces and gets the reports from them.
     # Also attempts to check artifacts
-    working_directory: /home/circleci/aggregate
+    working_directory: /home/circleci/circle-ci-test
     docker:
       - image: notnoopci/php:5.6
     steps:
