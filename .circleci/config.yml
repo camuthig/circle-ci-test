@@ -27,6 +27,12 @@ jobs:
           command: |
             mkdir -p /tmp/workspace/circle-ci-test
             mv * .[!.]* /tmp/workspace/circle-ci-test/
+      - run:
+          name: Dump in build before persist
+          command: |
+            ls -la /tmp/workspace
+            ls -la /tmp/reports
+            ls -la /tmp/workspace/circle-ci-test
       - persist_to_workspace:
           root: /tmp/workspace
           paths: circle-ci-test
@@ -65,7 +71,6 @@ jobs:
       - run:
           name: Dump before copy
           command: |
-            pwd
             ls -la reports
       - run:
           name: Copy the reports to workspace
