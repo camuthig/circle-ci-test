@@ -14,7 +14,7 @@ jobs:
       - checkout
       - run:
           name: Add a reports directory in the repo
-          command: mkdir -p circle-ci-test/reports
+          command: mkdir -p reports
       - run:
           name: Copy repo to tmp directory
           command: |
