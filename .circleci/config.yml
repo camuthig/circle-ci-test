@@ -101,11 +101,8 @@ jobs:
           command: |
             echo 'This is report two' > reports/run_2_report.txt
       - run:
-          name: Copy reports to shared workspace
-          command: cp reports/* /tmp/workspace/circle-ci-test/reports/
-      - run:
-          name: Copy the reports to workspace
-          command: cp reports/* /tmp/reports
+          name: Copy reports to workspace
+          command: cp reports/* /tmp/reports/
       - persist_to_workspace:
           root: /tmp
           paths: reports
