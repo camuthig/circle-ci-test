@@ -65,6 +65,9 @@ jobs:
       - run:
           name: Copy the reports to workspace
           command: cp reports/* /tmp/reports
+      - run:
+          name: Dump what we copied
+          command: ls -la /tmp/reports
       - persist_to_workspace:
           root: /tmp
           paths: reports
