@@ -16,7 +16,7 @@ jobs:
           name: Create a directory for storing reports between jobs
           command: |
             mkdir -p /tmp/reports
-            touch reports/.keep
+            touch /tmp/reports/.keep
       - run:
           name: Copy repo to tmp directory
           command: |
