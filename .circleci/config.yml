@@ -1,0 +1,109 @@
+version: 2
+
+jobs:
+  build_workspace:
+    # A job to checkout the repository and save it into the whole workflow's "workspace"
+    # This will mean that I don't have to checkout the project again for subsequent
+    # jobs.
+    # This job will also add a new directory (reports) into the repo for saving
+    # reports into
+    working_directory: /home/circleci/circleci-test
+    docker:
+      - image: notnoopci/php:5.6
+    steps:
+      - checkout
+      - run:
+          name: Copy repo to tmp directory
+          command: |
+            mkdir -p /tmp/workspace/circleci-test
+            mv * .[!.]* /tmp/workspace/circleci-test/
+      - run:
+          name: Add a reports directory in the repo
+          command: mkdir -p circle-ci-test/reports
+      - persist_to_workspace:
+          root: /tmp/checkout_workspace
+          paths: circle-ci-test
+
+  run_1:
+    # A job that takes the workspace, echos a file from it, and saves a new file
+    # The new file should be placed into a shared location in the workspace
+    # for later jobs to do stuff with
+    working_directory: /home/circleci/run_1
+    docker:
+      - image: notnoopci/php:5.6
+    steps:
+      - attach_workspace:
+          at: /tmp/checkout_workspace
+      - run:
+          name: Create a new file call run_1_report.txt
+          command: |
+            echo 'This is report one' > reports/run_1_report.txt
+      - persist_to_workspace:
+          root: /tmp/run_1_workspace
+          paths: .
+      - store_artifacts:
+          path: reports
+          prefix: run_1_reports
+
+  run_2:
+    # A job that takes the workspace, echos a file from it, and saves a new file
+    # The new file should be placed into a shared location in the workspace
+    # for later jobs to do stuff with
+    working_directory: /home/circleci/run_2
+    docker:
+      - image: notnoopci/php:5.6
+    steps:
+      - attach_workspace:
+          at: /tmp/checkout_workspace
+      - run:
+          name: Create a new file call run_2_report.txt
+          command: |
+            echo 'This is report two' > reports/run_2_report.txt
+      - persist_to_workspace:
+          root: /tmp/run_2_workspace
+          paths: .
+      - store_artifacts:
+          path: reports
+          prefix: run_2_reports
+
+  aggregate:
+    # A job that attaches all of the workspaces and gets the reports from them.
+    # Also attempts to check artifacts
+    working_directory: /home/circleci/aggregate
+    docker:
+      - image: notnoopci/php:5.6
+    steps:
+      - attach_workspace:
+          at: /tmp/checkout_workspace
+      - attach_workspace:
+          at: /tmp/run_1_workspace
+      - attach_workspace:
+          at: /tmp/run_2_workspace
+      - run:
+          name: Check for the run 1 report
+          command: |
+            if [ -f reports/run_1_report.txt ] ; then cat reports/run_1_report.txt ; else echo "no" ; fi
+      - run:
+          name: Check for the run 2 report
+          command: |
+            if [ -f reports/run_2_report.txt ] ; then cat reports/run_2_report.txt ; else echo "no" ; fi
+      - store_artifacts:
+          path: reports
+          prefix: aggregate_reports
+
+workflows:
+  version: 2
+
+  build:
+    - build_workspace
+    - run_1:
+        requires:
+          - build_workspace
+    - run_2:
+        requires:
+          - build_workspace
+    - aggregate:
+        requires:
+          - run_1
+          - run_2
+
