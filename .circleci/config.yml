@@ -47,12 +47,9 @@ jobs:
           name: Create a new file call run_1_report.txt
           command: |
             echo 'This is report one' > reports/run_1_report.txt
-      - run:
-          name: Copy reports to shared workspace
-          command: cp reports/* /tmp/workspace/circle-ci-test/reports/
       - persist_to_workspace:
-          root: /tmp/workspace
-          paths: .
+          root: /home/circleci
+          paths: circle-ci-test/reports
       - store_artifacts:
           path: reports
           prefix: run_1_reports
@@ -82,8 +79,8 @@ jobs:
           name: Copy reports to shared workspace
           command: cp reports/* /tmp/workspace/circle-ci-test/reports/
       - persist_to_workspace:
-          root: /tmp/workspace
-          paths: .
+          root: /home/circleci
+          paths: circle-ci-test/reports
       - store_artifacts:
           path: reports
           prefix: run_2_reports
@@ -97,6 +94,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - attach_workspace:
+          at: /home/circleci/circle-ci-test/reports
       - run:
           name: Load the repo from the shared workspace
           command: |
