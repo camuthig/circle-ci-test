@@ -95,15 +95,16 @@ workflows:
   version: 2
 
   build:
-    - build_workspace
-    - run_1:
-        requires:
-          - build_workspace
-    - run_2:
-        requires:
-          - build_workspace
-    - aggregate:
-        requires:
-          - run_1
-          - run_2
+    jobs:
+      - build_workspace
+      - run_1:
+          requires:
+            - build_workspace
+      - run_2:
+          requires:
+            - build_workspace
+      - aggregate:
+          requires:
+            - run_1
+            - run_2
 
