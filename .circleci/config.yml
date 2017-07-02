@@ -20,8 +20,8 @@ jobs:
       - run:
           name: Create a directory in the repo for the reports to be saved within the job
           command: |
-            mkdir -p /tmp/reports
-            touch /tmp/reports/.keep
+            mkdir -p reports
+            touch reports/.keep
       - run:
           name: Copy repo to tmp directory
           command: |
