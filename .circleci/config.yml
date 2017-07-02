@@ -7,7 +7,7 @@ jobs:
     # jobs.
     # This job will also add a new directory (reports) into the repo for saving
     # reports into
-    working_directory: /home/circleci/circleci-test
+    working_directory: /home/circleci/circle-ci-test
     docker:
       - image: notnoopci/php:5.6
     steps:
@@ -15,13 +15,13 @@ jobs:
       - run:
           name: Copy repo to tmp directory
           command: |
-            mkdir -p /tmp/workspace/circleci-test
+            mkdir -p /tmp/workspace/circle-ci-test
             mv * .[!.]* /tmp/workspace/circleci-test/
       - run:
           name: Add a reports directory in the repo
           command: mkdir -p circle-ci-test/reports
       - persist_to_workspace:
-          root: /tmp/checkout_workspace
+          root: /tmp/workspace
           paths: circle-ci-test
 
   run_1:
@@ -33,13 +33,13 @@ jobs:
       - image: notnoopci/php:5.6
     steps:
       - attach_workspace:
-          at: /tmp/checkout_workspace
+          at: /tmp/workspace
       - run:
           name: Create a new file call run_1_report.txt
           command: |
             echo 'This is report one' > reports/run_1_report.txt
       - persist_to_workspace:
-          root: /tmp/run_1_workspace
+          root: /tmp/workspace
           paths: .
       - store_artifacts:
           path: reports
@@ -54,13 +54,13 @@ jobs:
       - image: notnoopci/php:5.6
     steps:
       - attach_workspace:
-          at: /tmp/checkout_workspace
+          at: /tmp/workspace
       - run:
           name: Create a new file call run_2_report.txt
           command: |
             echo 'This is report two' > reports/run_2_report.txt
       - persist_to_workspace:
-          root: /tmp/run_2_workspace
+          root: /tmp/workspace
           paths: .
       - store_artifacts:
           path: reports
@@ -74,11 +74,7 @@ jobs:
       - image: notnoopci/php:5.6
     steps:
       - attach_workspace:
-          at: /tmp/checkout_workspace
-      - attach_workspace:
-          at: /tmp/run_1_workspace
-      - attach_workspace:
-          at: /tmp/run_2_workspace
+          at: /tmp/workspace
       - run:
           name: Check for the run 1 report
           command: |
