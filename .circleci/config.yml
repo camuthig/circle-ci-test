@@ -18,6 +18,11 @@ jobs:
             mkdir -p /tmp/reports
             touch /tmp/reports/.keep
       - run:
+          name: Create a directory in the repo for the reports to be saved within the job
+          command: |
+            mkdir -p /tmp/reports
+            touch /tmp/reports/.keep
+      - run:
           name: Copy repo to tmp directory
           command: |
             mkdir -p /tmp/workspace/circle-ci-test
@@ -87,7 +92,7 @@ jobs:
       - run:
           name: Load the repo from the shared workspace
           command: |
-            mv /tmp/workspace/circle-ci-test/* /tmp/workspace/php-circle-ci-test/.[!.]* .
+            mv /tmp/workspace/circle-ci-test/* /tmp/workspace/circle-ci-test/.[!.]* .
       - run:
           name: Dump the structure
           command: ls
