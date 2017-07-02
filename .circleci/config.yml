@@ -13,9 +13,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Add a reports directory in the repo
+          name: Create a directory for storing reports between jobs
           command: |
-            mkdir -p reports
+            mkdir -p /tmp/reports
             touch reports/.keep
       - run:
           name: Copy repo to tmp directory
@@ -25,6 +25,9 @@ jobs:
       - persist_to_workspace:
           root: /tmp/workspace
           paths: circle-ci-test
+      - persist_to_workspace:
+          root: /tmp
+          paths: reports
 
   run_1:
     # A job that takes the workspace, echos a file from it, and saves a new file
@@ -36,6 +39,8 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - attach_workspace:
+          at: /tmp/reports
       - run:
           name: Load the repo from the shared workspace
           command: |
@@ -47,9 +52,12 @@ jobs:
           name: Create a new file call run_1_report.txt
           command: |
             echo 'This is report one' > reports/run_1_report.txt
+      - run:
+          name: Copy the reports to workspace
+          command: cp reports/* /tmp/reports
       - persist_to_workspace:
-          root: /home/circleci
-          paths: circle-ci-test/reports
+          root: /tmp
+          paths: reports
       - store_artifacts:
           path: reports
           prefix: run_1_reports
@@ -78,9 +86,12 @@ jobs:
       - run:
           name: Copy reports to shared workspace
           command: cp reports/* /tmp/workspace/circle-ci-test/reports/
+      - run:
+          name: Copy the reports to workspace
+          command: cp reports/* /tmp/reports
       - persist_to_workspace:
-          root: /home/circleci
-          paths: circle-ci-test/reports
+          root: /tmp
+          paths: reports
       - store_artifacts:
           path: reports
           prefix: run_2_reports
@@ -93,26 +104,20 @@ jobs:
       - image: notnoopci/php:5.6
     steps:
       - attach_workspace:
-          at: /tmp/workspace
-      - attach_workspace:
-          at: /home/circleci/circle-ci-test/reports
+          at: /tmp/reports
       - run:
-          name: Load the repo from the shared workspace
-          command: |
-            mv /tmp/workspace/circle-ci-test/* /tmp/workspace/php-circle-ci-test/.[!.]* .
-      - run:
-          name: Dump the structure
-          command: ls
+          name: Dump the reports
+          command: ls /tmp/reports
       - run:
           name: Check for the run 1 report
           command: |
-            if [ -f reports/run_1_report.txt ] ; then cat reports/run_1_report.txt ; else echo "no" ; fi
+            if [ -f /tmp/reports/run_1_report.txt ] ; then cat /tmp/reports/run_1_report.txt ; else echo "no" ; fi
       - run:
           name: Check for the run 2 report
           command: |
-            if [ -f reports/run_2_report.txt ] ; then cat reports/run_2_report.txt ; else echo "no" ; fi
+            if [ -f /tmp/reports/run_2_report.txt ] ; then cat /tmp/reports/run_2_report.txt ; else echo "no" ; fi
       - store_artifacts:
-          path: reports
+          path: /tmp/reports
           prefix: aggregate_reports
 
 workflows:
