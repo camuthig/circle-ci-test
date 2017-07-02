@@ -42,6 +42,11 @@ jobs:
       - attach_workspace:
           at: /tmp/reports
       - run:
+          name: Dump the workspaces
+          command: |
+            ls -la /tmp/workspace/circle-ci-test
+            ls -la /tmp/reports
+      - run:
           name: Load the repo from the shared workspace
           command: |
             mv /tmp/workspace/circle-ci-test/* /tmp/workspace/circle-ci-test/.[!.]* .
@@ -72,6 +77,13 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - attach_workspace:
+          at: /tmp/reports
+      - run:
+          name: Dump the workspaces
+          command: |
+            ls -la /tmp/workspace/circle-ci-test
+            ls -la /tmp/reports
       - run:
           name: Load the repo from the shared workspace
           command: |
