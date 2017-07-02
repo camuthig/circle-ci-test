@@ -35,6 +35,9 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run:
+          name: Dump the structure
+          command: ls
+      - run:
           name: Create a new file call run_1_report.txt
           command: |
             echo 'This is report one' > reports/run_1_report.txt
@@ -56,6 +59,9 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run:
+          name: Dump the structure
+          command: ls
+      - run:
           name: Create a new file call run_2_report.txt
           command: |
             echo 'This is report two' > reports/run_2_report.txt
@@ -75,6 +81,9 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - run:
+          name: Dump the structure
+          command: ls
       - run:
           name: Check for the run 1 report
           command: |
