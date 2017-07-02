@@ -14,7 +14,9 @@ jobs:
       - checkout
       - run:
           name: Add a reports directory in the repo
-          command: mkdir -p reports
+          command: |
+            mkdir -p reports
+            touch reports/.keep
       - run:
           name: Copy repo to tmp directory
           command: |
