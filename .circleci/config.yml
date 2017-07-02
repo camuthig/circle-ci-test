@@ -16,7 +16,7 @@ jobs:
           name: Copy repo to tmp directory
           command: |
             mkdir -p /tmp/workspace/circle-ci-test
-            mv * .[!.]* /tmp/workspace/circleci-test/
+            mv * .[!.]* /tmp/workspace/circle-ci-test/
       - run:
           name: Add a reports directory in the repo
           command: mkdir -p circle-ci-test/reports
